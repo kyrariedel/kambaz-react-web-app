@@ -1,7 +1,7 @@
 import Signin from "./signin";
 import Profile from "./profile";
 import Signup from "./signup";
-import AccountNavigation from "../navigation";
+// import AccountNavigation from "../navigation";
 
 import { Routes, Route, Navigate } from "react-router";
 export default function Account() {
@@ -9,9 +9,9 @@ export default function Account() {
     <div id="wd-account-screen">
       <table>
         <tr>
-          <td valign="top">
+          {/* <td valign="top">
             <AccountNavigation />
-          </td>
+          </td> */}
           <td valign="top">
             <Routes>
               <Route path="/" element={<Navigate to="/Kambaz/Account/Signin" />} />
