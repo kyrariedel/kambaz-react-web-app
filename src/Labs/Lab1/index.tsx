@@ -179,7 +179,10 @@ Your favorite books (in no particular order)
            value="Wonderland"
            title="The last name"
            id="wd-text-fields-last-name" />
-    {/* copy rest of form elements here  */}
+    <label htmlFor="wd-text-fields-last-name">Title:</label>
+    <input type="text" placeholder="Dr"
+           title="The title"
+           id="wd-text-fields-title" />
   </form>
 </div>
 <h5>Text boxes</h5>
