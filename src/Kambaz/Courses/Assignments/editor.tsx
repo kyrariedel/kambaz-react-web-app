@@ -1,88 +1,100 @@
+import { Container, FormGroup, FormLabel, FormControl, FormSelect, Form, Row, Col, Button } from "react-bootstrap";
+
 export default function AssignmentEditor() {
     return (
-      <div id="wd-assignments-editor">
-        <label htmlFor="wd-name"><strong>Assignment Name</strong></label>
-        <input id="wd-name" value="A1 - ENV + HTML" /><br /><br />
-        <textarea id="wd-description">
-          The assignment is available online Submit a link to the landing page of your Web Application running on Netlify. The landing page should include the following: Your full name and section Links to each of the assignments Link to the Kanbas application Links to all relavent source code repositories The Kanbas application should include a link to navigate back to the landing page.
-        </textarea>
-        <br />
-        <table>
-          <tr>
-            <td align="right" valign="top">
-              <label htmlFor="wd-points">Points</label>
-            </td>
-            <td>
-              <input id="wd-points" value={100} />
-            </td>
-          </tr>
-          <tr>
-            <td align="right" valign="top">
-                <label  htmlFor="wd-group"> Assignment Group: </label>
-            </td>
-            <select id="wd-group">
-                <option value="ASSIGNMENTS">Assignments</option>
-                <option value="CREATEGROUP">[Create Group]</option>
-            </select>
-          </tr>
-          <tr>
-            <td align="right" valign="top">
-                <label  htmlFor="wd-display-grade-as"> Display Grade as </label>
-            </td>
-            <select id="wd-display-grade-as">
-                <option value="PERCENTAGE">Percentage</option>
-                <option value="POINTS">Points</option>
-            </select>
-          </tr>
-          <tr>
-            <td align="right" valign="top">
-                <label  htmlFor="wd-submission-type"> Submission Type </label>
-            </td>
-            <select id="wd-submission-type">
-                <option value="ONLINE">Online</option>
-                <option value="ONPAPER">On Paper</option>
-            </select> <br/>
-            <label>Online Entry Options</label><br/>
-            <input type="checkbox" name="check-entry" id="wd-text-entry"/>
-            <label htmlFor="wd-text-entry">Text Entry</label><br/>
-            <input type="checkbox" name="check-entry" id="wd-website-url"/>
-            <label htmlFor="wd-website-url">Website URL</label><br/>
-            <input type="checkbox" name="check-entry" id="wd-media-recordings"/>
-            <label htmlFor="wd-media-recordings">Media Recordings</label><br/>
-            <input type="checkbox" name="check-entry" id="wd-student-annotation"/>
-            <label htmlFor="wd-student-annotation">Student Annotations</label><br/>
-            <input type="checkbox" name="check-entry" id="wd-file-upload"/>
-            <label htmlFor="wd-file-upload">File Uploads</label><br/>
-          </tr>
-          <tr>
-            <td align="right" valign="top">
-                <label  htmlFor="wd-assign-to"> Assign </label>
-            </td>
-            <td colSpan={3}>
-                <label htmlFor="wd-assign-to"> Assign to </label> 
-                <br/>
-                <input type="text"
-                placeholder="Everyone"
-                id="wd-assign-to"/><br/>
-                <label htmlFor="wd-due-date"> Due </label> 
-                <br/>
-                <input type="date"
-                value="2024-05-13"
-                id="wd-due-date"/><br/>
-                <label htmlFor="wd-available-from"> Available From </label> 
-                <label htmlFor="wd-available-until"> Until </label> 
-                <br/>
-                <input type="date"
-                value="2024-05-06"
-                id="wd-available-from"/>
-                <input type="date"
-                value="2024-05-20"
-                id="wd-available-until"/>
-            </td>
-          </tr>
-        </table>
-        <button id="wd-cancel">Cancel</button>
-        <button id="wd-save">Save</button>
-      </div>
-  );}
+        <Container id="wd-assignments-editor">
+            <h2>Assignment Editor</h2>
+
+            <FormGroup className="mb-3" controlId="wd-name">
+                <FormLabel><strong>Assignment Name</strong></FormLabel>
+                <FormControl value="A1 - ENV + HTML" />
+            </FormGroup>
+
+            <FormGroup className="mb-3" controlId="wd-description">
+                <FormLabel>Description</FormLabel>
+                <FormControl as="textarea" rows={5} value="The assignment is available online Submit a link to the landing page of your Web Application running on Netlify..." />
+            </FormGroup>
+
+            <FormGroup as={Row} className="mb-3" controlId="wd-points">
+                <FormLabel column sm={3}>Points</FormLabel>
+                <Col sm={9}>
+                    <FormControl value={100} />
+                </Col>
+            </FormGroup>
+
+            <FormGroup as={Row} className="mb-3" controlId="wd-group">
+                <FormLabel column sm={3}>Assignment Group</FormLabel>
+                <Col sm={9}>
+                    <FormSelect>
+                        <option value="ASSIGNMENTS">Assignments</option>
+                        <option value="CREATEGROUP">[Create Group]</option>
+                    </FormSelect>
+                </Col>
+            </FormGroup>
+
+            <FormGroup as={Row} className="mb-3" controlId="wd-display-grade-as">
+                <FormLabel column sm={3}>Display Grade as</FormLabel>
+                <Col sm={9}>
+                    <FormSelect>
+                        <option value="PERCENTAGE">Percentage</option>
+                        <option value="POINTS">Points</option>
+                    </FormSelect>
+                </Col>
+            </FormGroup>
+
+            <FormGroup as={Row} className="mb-3" controlId="wd-submission-type">
+                <FormLabel column sm={3}>Submission Type</FormLabel>
+                <Col sm={9}>
+                    <FormSelect>
+                        <option value="ONLINE">Online</option>
+                        <option value="ONPAPER">On Paper</option>
+                    </FormSelect>
+                </Col>
+            </FormGroup>
+
+            <FormGroup className="mb-3">
+                <FormLabel>Online Entry Options</FormLabel>
+                <Form.Check type="checkbox" id="wd-text-entry" label="Text Entry" />
+                <Form.Check type="checkbox" id="wd-website-url" label="Website URL" />
+                <Form.Check type="checkbox" id="wd-media-recordings" label="Media Recordings" />
+                <Form.Check type="checkbox" id="wd-student-annotation" label="Student Annotations" />
+                <Form.Check type="checkbox" id="wd-file-upload" label="File Uploads" />
+            </FormGroup>
+
+            <FormGroup as={Row} className="mb-3" controlId="wd-assign-to">
+                <FormLabel column sm={3}>Assign</FormLabel>
+                <Col sm={9}>
+                    <FormControl type="text" placeholder="Everyone" />
+                </Col>
+            </FormGroup>
+
+            <FormGroup as={Row} className="mb-3" controlId="wd-due-date">
+                <FormLabel column sm={3}>Due</FormLabel>
+                <Col sm={9}>
+                    <FormControl type="date" value="2024-05-13" />
+                </Col>
+            </FormGroup>
+
+            <FormGroup as={Row} className="mb-3" controlId="wd-available-from">
+                <FormLabel column sm={3}>Available From</FormLabel>
+                <Col sm={9}>
+                    <FormControl type="date" value="2024-05-06" />
+                </Col>
+            </FormGroup>
+
+            <FormGroup as={Row} className="mb-3" controlId="wd-available-until">
+                <FormLabel column sm={3}>Until</FormLabel>
+                <Col sm={9}>
+                    <FormControl type="date" value="2024-05-20" />
+                </Col>
+            </FormGroup>
+
+            <div className="d-flex justify-content-between">
+                <Button variant="secondary" id="wd-cancel">Cancel</Button>
+                <Button variant="primary" id="wd-save">Save</Button>
+            </div>
+        </Container>
+    );
+}
+
   
