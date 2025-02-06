@@ -272,7 +272,7 @@ Please
 <a href="https://www.lipsum.com" id="wd-lipsum">click here</a>
 to get dummy text<br/>
 Please
-<a href="https://github.com/kyrariedel/kanbas-react-web-app" id="wd-github">click here</a>
+<a href="https://github.com/kyrariedel/kambaz-react-web-app/tree/A1" id="wd-github">click here</a>
 to get the github repository. <br/>
 </div>
   );}
