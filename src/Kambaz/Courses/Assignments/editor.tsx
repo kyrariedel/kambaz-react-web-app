@@ -1,7 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Container, FormGroup, FormLabel, FormControl, FormSelect, Form, Row, Col } from "react-bootstrap";
-import db from "../Database";
+import * as db from "../../Database";
 
 export default function AssignmentEditor() {
     const { courseId, assignmentId } = useParams();

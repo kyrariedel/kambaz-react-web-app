@@ -25,7 +25,7 @@ import House from "./house";
 import Classes from "./classes";
 import Styles from "./styles";
 import Add from "./add";
-import Square from "./square";
+// import Square from "./square";
 import Highlight from "./highlight";
 
 
@@ -61,7 +61,6 @@ export default function Lab3() {
       <Classes/>
       <Styles/>
       <Add a={3} b={4} />
-      <Square/>
       <Highlight>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipitratione eaque illo minus cum, saepe totam
         vel nihil repellat nemo explicabo excepturi consectetur. Modi omnis minus sequi maiores, provident voluptates.

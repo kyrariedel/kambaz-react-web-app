@@ -5,7 +5,7 @@ import { ListGroup } from "react-bootstrap";
 import { BsGripVertical } from "react-icons/bs";
 import ModuleControlButtons from "./modulecontrolbuttons";
 import AssignmentControlButtons from "./assignmentcontrolbuttons";
-import db from "../Database";
+import * as db from "../../Database";
 
 export default function Assignments() {
     const { courseId } = useParams();
