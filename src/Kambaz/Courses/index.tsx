@@ -14,10 +14,10 @@ export default function Courses() {
     const { pathname } = useLocation();
     return (
         <div>
-            <h2 className="text-danger">
-                <FaAlignJustify className="me-3 fs-4 mb-1" />
-                {course.name} &gt; {pathname.split("/")[4]}
-            </h2>
+      <h2 className="text-danger">
+        <FaAlignJustify className="me-3 fs-4 mb-1" />
+        {course && course.name} &gt; {pathname.split("/")[4]}
+      </h2>
             <div className="d-flex">
                 <div className="d-none d-md-block">
                     <CourseNavigation />
