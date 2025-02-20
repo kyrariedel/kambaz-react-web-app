@@ -1,4 +1,4 @@
-import './Classes.css';
+import './classes.css';
 export default function Classes() {
     const color = 'blue';
     const dangerous = true;
