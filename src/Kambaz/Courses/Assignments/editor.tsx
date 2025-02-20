@@ -5,33 +5,35 @@ import * as db from "../../Database";
 
 export default function AssignmentEditor() {
     const { courseId, assignmentId } = useParams();
-    const [assignment, setAssignment] = useState({
+
+    const initialState = {
+        _id: assignmentId || '',
         title: "",
         description: "",
         points: 0,
+        course: courseId || '',
+        courseId: courseId || '',
         assignmentGroup: "ASSIGNMENTS",
         displayGrade: "PERCENTAGE",
         submissionType: "ONLINE",
         dueDate: "",
         availableDate: "",
         availableUntil: ""
-    });
+    };
+
+    const [assignment, setAssignment] = useState(initialState);
 
     useEffect(() => {
-        let found = db.assignments.find(a => a._id === assignmentId);
+        const found = db.assignments.find(a => a._id === assignmentId);
         if (found) {
-            let dueDate = new Date(found.dueDate).toISOString().split('T')[0];
-            let availableDate = new Date(found.availableDate).toISOString().split('T')[0];
-            let availableUntil = found.availableUntil ? 
+            const dueDate = new Date(found.dueDate).toISOString().split('T')[0];
+            const availableDate = new Date(found.availableDate).toISOString().split('T')[0];
+            const availableUntil = found.availableUntil ? 
                 new Date(found.availableUntil).toISOString().split('T')[0] : "";
 
             setAssignment({
-                title: found.title,
-                description: found.description,
-                points: found.points,
-                assignmentGroup: found.assignmentGroup,
-                displayGrade: found.displayGrade || "PERCENTAGE",
-                submissionType: found.submissionType,
+                ...initialState,
+                ...found,
                 dueDate,
                 availableDate,
                 availableUntil
