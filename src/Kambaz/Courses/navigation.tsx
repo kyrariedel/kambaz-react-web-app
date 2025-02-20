@@ -1,24 +1,27 @@
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useParams, useLocation } from "react-router-dom";
 
 export default function CourseNavigation() {
-  const { courseId } = useParams<{ courseId: string }>();
+  const { courseId } = useParams();
   const { pathname } = useLocation();
 
   const links = ["Home", "Modules", "Piazza", "Zoom", "Assignments", "Quizzes", "Grades", "People"];
 
-  const isActive = (link: string) => pathname.includes(link) && pathname.includes(courseId);
-
   return (
     <div id="wd-courses-navigation" className="wd list-group fs-5 rounded-0">
-      {links.map((link) => (
-        <Link
-          key={link}
-          to={`/Kambaz/Courses/${courseId || 'defaultCourseId'}/${link}`}  {/* Provide a fallback here */}
-          className={`list-group-item border-0 ${isActive(link) ? "active text-danger" : "text-dark"}`}
-        >
-          {link}
-        </Link>
-      ))}
+      {links.map((link) => {
+        const linkPath = `/Kambaz/Courses/${courseId}/${link}`;
+        const isActive = pathname.includes(link); 
+
+        return (
+          <Link 
+            key={link} 
+            to={linkPath} 
+            className={`list-group-item ${isActive ? 'active' : 'text-danger'} border border-0`}
+          >
+            {link}
+          </Link>
+        );
+      })}
     </div>
   );
 }
