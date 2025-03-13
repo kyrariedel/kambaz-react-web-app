@@ -1,9 +1,9 @@
-import React from "react";
 import { useSelector } from "react-redux";
-import { isFaculty } from "./reducer"; // Adjust path as needed
+import { isFaculty } from "./reducer"; 
 
-// Component that only renders children if user has FACULTY role
-const FacultyOnly = ({ children }) => {
+import { ReactNode } from "react";
+
+const FacultyOnly = ({ children }: { children: ReactNode }) => {
   const hasFacultyRole = useSelector(isFaculty);
   
   if (!hasFacultyRole) {

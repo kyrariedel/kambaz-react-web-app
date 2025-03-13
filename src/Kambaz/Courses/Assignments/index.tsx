@@ -6,22 +6,14 @@ import * as db from "../../Database";
 import AssignmentControls from "./assignmentcontrols";
 import ModuleControlButtons from "./modulecontrolbuttons";
 import AssignmentControlButtons from "./assignmentcontrolbuttons";
-import { useSelector } from "react-redux";
-import { addAssignment, updateAssignment, deleteAssignment } from "./reducer";
+import { useSelector, useDispatch } from "react-redux";
+import { updateAssignment, deleteAssignment } from "./reducer";
 import FacultyOnly from "../../Account/facultyonly";
 
 export default function Assignments() {
     const { courseId } = useParams();
-    const [assignmentName, setAssignmentName] = useState("");
     const { assignments } = useSelector((state: any) => state.assignmentsReducer);
-    const [courseAssignments, setCourseAssignments] = useState<any[]>([]);
-
-    useEffect(() => {
-        const filteredAssignments = db.assignments.filter(
-            assignment => assignment.courseId === courseId
-        );
-        setCourseAssignments(filteredAssignments);
-    }, [courseId]);
+    const dispatch = useDispatch();
 
     const formatDate = (date: string) => {
         return new Date(date).toLocaleDateString('en-US', {
@@ -35,7 +27,12 @@ export default function Assignments() {
 
     return (
         <div>
-            <AssignmentControls courseId={courseId} />
+            {courseId && <AssignmentControls />}
+            <div className="d-flex justify-content-between mt-4">
+                <Link to={`/Kambaz/Courses/${courseId}/Assignments/new`} className="btn btn-danger">
+                    Add Assignment
+                </Link>
+            </div>
             <br /><br /><br /><br />
 
             <ListGroup className="rounded-0 mt-4" id="wd-module">
@@ -84,12 +81,11 @@ export default function Assignments() {
                                     {formatDate(assignment.dueDate)} |
                                     {assignment.points} pts
 
-                                    {/* Assignment Controls */}
                                     <FacultyOnly>
                                         <AssignmentControlButtons
                                             assignmentId={assignment._id}
                                             deleteAssignment={(assignmentId) => dispatch(deleteAssignment(assignmentId))}
-                                            updateAssignment={(assignmentId) =>
+                                            updateAssignment={() =>
                                                 dispatch(updateAssignment({ ...assignment, editing: true }))
                                             }
                                         />

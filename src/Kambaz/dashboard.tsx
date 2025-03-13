@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import * as db from "./Database";
-import { FormControl, Button } from "react-bootstrap";
+import { FormControl, Button, Form } from "react-bootstrap";
 import { v4 as uuidv4 } from "uuid";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import FacultyOnly from "./Account/facultyonly";
 
 export default function Dashboard(
@@ -14,7 +14,6 @@ export default function Dashboard(
     updateCourse: () => void; }) {
       const { currentUser } = useSelector((state: any) => state.accountReducer);
       const [enrollmentsData, setEnrollmentsData] = useState(db.enrollments);
-      const dispatch = useDispatch();
       const navigate = useNavigate();
       const [showAllCourses, setShowAllCourses] = useState(false);
 
@@ -26,7 +25,6 @@ export default function Dashboard(
         const isEnrolled = isUserEnrolled(courseId);
 
         if (isEnrolled) {
-          // Unenroll
           const updatedEnrollments = enrollmentsData.filter(
             enrollment => 
               !(enrollment.user === currentUser._id && 
@@ -34,7 +32,6 @@ export default function Dashboard(
           );
           setEnrollmentsData(updatedEnrollments);
         } else {
-          // Enroll
           const newEnrollment = {
             _id: uuidv4(),
             user: currentUser._id,
@@ -103,7 +100,8 @@ export default function Dashboard(
           className="mb-2" 
           onChange={(e) => setCourse({ ...course, name: e.target.value })} 
         />
-        <FormControl 
+        <Form.Control 
+          as="textarea"
           value={course.description} 
           rows={3} 
           onChange={(e) => setCourse({ ...course, description: e.target.value })} 

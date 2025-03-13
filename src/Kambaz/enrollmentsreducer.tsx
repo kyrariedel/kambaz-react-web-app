@@ -1,30 +1,34 @@
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import * as db from "./Database";
 
-const initialState = {
-  enrollments: [...db.enrollments]
+interface Enrollment {
+  user: string;
+  course: string;
+}
+
+interface EnrollmentState {
+  enrollments: Enrollment[];
+}
+
+const initialState: EnrollmentState = {
+  enrollments: [...db.enrollments],
 };
 
-const enrollmentReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case "enroll":
-      return {
-        ...state,
-        enrollments: [...state.enrollments, action.payload]
-      };
-    
-    case "unenroll":
-      return {
-        ...state,
-        enrollments: state.enrollments.filter(
-          enrollment => 
-            !(enrollment.user === action.payload.user && 
-              enrollment.course === action.payload.course)
-        )
-      };
-    
-    default:
-      return state;
-  }
-};
+const enrollmentSlice = createSlice({
+  name: "enrollments",
+  initialState,
+  reducers: {
+    enroll: (state, action: PayloadAction<Enrollment>) => {
+      state.enrollments.push(action.payload);
+    },
+    unenroll: (state, action: PayloadAction<Enrollment>) => {
+      state.enrollments = state.enrollments.filter(
+        (enrollment) =>
+          !(enrollment.user === action.payload.user && enrollment.course === action.payload.course)
+      );
+    },
+  },
+});
 
-export default enrollmentReducer;
+export const { enroll, unenroll } = enrollmentSlice.actions;
+export default enrollmentSlice.reducer;

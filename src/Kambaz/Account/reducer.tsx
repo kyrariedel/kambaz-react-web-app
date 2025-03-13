@@ -1,5 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-const initialState = {
+interface User {
+  role: string;
+}
+
+const initialState: { currentUser: User | null } = {
   currentUser: null,
 };
 const accountSlice = createSlice({
@@ -12,6 +16,7 @@ const accountSlice = createSlice({
   },
 });
 export const { setCurrentUser } = accountSlice.actions;
-export const isFaculty = (state) => 
+import { RootState } from "../store"; // Import RootState from store.tsx
+export const isFaculty = (state: RootState) => 
     state.accountReducer.currentUser?.role === "FACULTY";
 export default accountSlice.reducer;
