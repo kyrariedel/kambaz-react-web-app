@@ -1,8 +1,6 @@
 import { useParams, Link } from "react-router-dom";
-import { useState, useEffect } from "react";
 import { ListGroup, FormControl } from "react-bootstrap";
 import { BsGripVertical } from "react-icons/bs";
-import * as db from "../../Database";
 import AssignmentControls from "./assignmentcontrols";
 import ModuleControlButtons from "./modulecontrolbuttons";
 import AssignmentControlButtons from "./assignmentcontrolbuttons";
