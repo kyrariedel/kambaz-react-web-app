@@ -1,100 +1,174 @@
-import { Container, FormGroup, FormLabel, FormControl, FormSelect, Form, Row, Col, Button } from "react-bootstrap";
+import { useParams, Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Container, FormGroup, FormLabel, FormControl, FormSelect, Form, Row, Col } from "react-bootstrap";
+import * as db from "../../Database";
 
 export default function AssignmentEditor() {
+    const { courseId, assignmentId } = useParams();
+
+    const initialState = {
+        _id: assignmentId || '',
+        title: "",
+        description: "",
+        points: 0,
+        course: courseId || '',
+        courseId: courseId || '',
+        assignmentGroup: "ASSIGNMENTS",
+        displayGrade: "PERCENTAGE",
+        submissionType: "ONLINE",
+        dueDate: "",
+        availableDate: "",
+        availableUntil: ""
+    };
+
+    const [assignment, setAssignment] = useState(initialState);
+
+    useEffect(() => {
+        const found = db.assignments.find(a => a._id === assignmentId);
+        if (found) {
+            const dueDate = new Date(found.dueDate).toISOString().split('T')[0];
+            const availableDate = new Date(found.availableDate).toISOString().split('T')[0];
+            const availableUntil = found.availableUntil ? 
+                new Date(found.availableUntil).toISOString().split('T')[0] : "";
+
+            setAssignment({
+                ...initialState,
+                ...found,
+                dueDate,
+                availableDate,
+                availableUntil
+            });
+        }
+    }, [assignmentId]);
+
     return (
         <Container id="wd-assignments-editor">
-            <h2>Assignment Editor</h2>
+            <h2>{assignment.title}</h2>
 
-            <FormGroup className="mb-3" controlId="wd-name">
+            <FormGroup className="mb-3">
                 <FormLabel><strong>Assignment Name</strong></FormLabel>
-                <FormControl value="A1 - ENV + HTML" />
+                <FormControl 
+                    value={assignment.title}
+                    onChange={e => setAssignment({...assignment, title: e.target.value})}
+                />
             </FormGroup>
 
-            <FormGroup className="mb-3" controlId="wd-description">
+            <FormGroup className="mb-3">
                 <FormLabel>Description</FormLabel>
-                <FormControl as="textarea" rows={5} value="The assignment is available online Submit a link to the landing page of your Web Application running on Netlify..." />
+                <FormControl 
+                    as="textarea" 
+                    rows={5} 
+                    value={assignment.description}
+                    onChange={e => setAssignment({...assignment, description: e.target.value})}
+                />
             </FormGroup>
 
-            <FormGroup as={Row} className="mb-3" controlId="wd-points">
+            <Row className="mb-3">
                 <FormLabel column sm={3}>Points</FormLabel>
                 <Col sm={9}>
-                    <FormControl value={100} />
+                    <FormControl 
+                        value={assignment.points}
+                        onChange={e => setAssignment({...assignment, points: Number(e.target.value)})}
+                    />
                 </Col>
-            </FormGroup>
+            </Row>
 
-            <FormGroup as={Row} className="mb-3" controlId="wd-group">
+            <Row className="mb-3">
                 <FormLabel column sm={3}>Assignment Group</FormLabel>
                 <Col sm={9}>
-                    <FormSelect>
+                    <FormSelect 
+                        value={assignment.assignmentGroup}
+                        onChange={e => setAssignment({...assignment, assignmentGroup: e.target.value})}
+                    >
                         <option value="ASSIGNMENTS">Assignments</option>
                         <option value="CREATEGROUP">[Create Group]</option>
                     </FormSelect>
                 </Col>
-            </FormGroup>
+            </Row>
 
-            <FormGroup as={Row} className="mb-3" controlId="wd-display-grade-as">
+            <Row className="mb-3">
                 <FormLabel column sm={3}>Display Grade as</FormLabel>
                 <Col sm={9}>
-                    <FormSelect>
+                    <FormSelect 
+                        value={assignment.displayGrade}
+                        onChange={e => setAssignment({...assignment, displayGrade: e.target.value})}
+                    >
                         <option value="PERCENTAGE">Percentage</option>
                         <option value="POINTS">Points</option>
                     </FormSelect>
                 </Col>
-            </FormGroup>
+            </Row>
 
-            <FormGroup as={Row} className="mb-3" controlId="wd-submission-type">
+            <Row className="mb-3">
                 <FormLabel column sm={3}>Submission Type</FormLabel>
                 <Col sm={9}>
-                    <FormSelect>
+                    <FormSelect 
+                        value={assignment.submissionType}
+                        onChange={e => setAssignment({...assignment, submissionType: e.target.value})}
+                    >
                         <option value="ONLINE">Online</option>
                         <option value="ONPAPER">On Paper</option>
                     </FormSelect>
                 </Col>
-            </FormGroup>
+            </Row>
 
             <FormGroup className="mb-3">
                 <FormLabel>Online Entry Options</FormLabel>
-                <Form.Check type="checkbox" id="wd-text-entry" label="Text Entry" />
-                <Form.Check type="checkbox" id="wd-website-url" label="Website URL" />
-                <Form.Check type="checkbox" id="wd-media-recordings" label="Media Recordings" />
-                <Form.Check type="checkbox" id="wd-student-annotation" label="Student Annotations" />
-                <Form.Check type="checkbox" id="wd-file-upload" label="File Uploads" />
+                <Form.Check type="checkbox" label="Text Entry" />
+                <Form.Check type="checkbox" label="Website URL" />
+                <Form.Check type="checkbox" label="Media Recordings" />
+                <Form.Check type="checkbox" label="Student Annotations" />
+                <Form.Check type="checkbox" label="File Uploads" />
             </FormGroup>
 
-            <FormGroup as={Row} className="mb-3" controlId="wd-assign-to">
+            <Row className="mb-3">
                 <FormLabel column sm={3}>Assign</FormLabel>
                 <Col sm={9}>
                     <FormControl type="text" placeholder="Everyone" />
                 </Col>
-            </FormGroup>
+            </Row>
 
-            <FormGroup as={Row} className="mb-3" controlId="wd-due-date">
+            <Row className="mb-3">
                 <FormLabel column sm={3}>Due</FormLabel>
                 <Col sm={9}>
-                    <FormControl type="date" value="2024-05-13" />
+                    <FormControl 
+                        type="date" 
+                        value={assignment.dueDate}
+                        onChange={e => setAssignment({...assignment, dueDate: e.target.value})}
+                    />
                 </Col>
-            </FormGroup>
+            </Row>
 
-            <FormGroup as={Row} className="mb-3" controlId="wd-available-from">
+            <Row className="mb-3">
                 <FormLabel column sm={3}>Available From</FormLabel>
                 <Col sm={9}>
-                    <FormControl type="date" value="2024-05-06" />
+                    <FormControl 
+                        type="date" 
+                        value={assignment.availableDate}
+                        onChange={e => setAssignment({...assignment, availableDate: e.target.value})}
+                    />
                 </Col>
-            </FormGroup>
+            </Row>
 
-            <FormGroup as={Row} className="mb-3" controlId="wd-available-until">
+            <Row className="mb-3">
                 <FormLabel column sm={3}>Until</FormLabel>
                 <Col sm={9}>
-                    <FormControl type="date" value="2024-05-20" />
+                    <FormControl 
+                        type="date" 
+                        value={assignment.availableUntil}
+                        onChange={e => setAssignment({...assignment, availableUntil: e.target.value})}
+                    />
                 </Col>
-            </FormGroup>
+            </Row>
 
             <div className="d-flex justify-content-between">
-                <Button variant="secondary" id="wd-cancel">Cancel</Button>
-                <Button variant="primary" id="wd-save">Save</Button>
+                <Link to={`/Kambaz/Courses/${courseId}/Assignments`} className="btn btn-secondary">
+                    Cancel
+                </Link>
+                <Link to={`/Kambaz/Courses/${courseId}/Assignments`} className="btn btn-primary">
+                    Save
+                </Link>
             </div>
         </Container>
     );
 }
-
-  
