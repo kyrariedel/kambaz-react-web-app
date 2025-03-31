@@ -1,22 +1,28 @@
 {
   "name": "kambaz-react-web-app",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "node index.js"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.6.1",
     "bootstrap": "^5.3.3",
+    "express": "^5.1.0",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.9",
     "react-dom": "^18.3.1",
-    "react-icons": "^5.4.0",
-    "react-router": "^7.1.3",
-    "react-router-dom": "^7.1.3"
+    "react-icons": "^5.5.0",
+    "react-redux": "^9.2.0",
+    "react-router": "^7.4.1",
+    "react-router-dom": "^7.4.1",
+    "redux": "^5.0.1",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
@@ -30,5 +36,27 @@
     "typescript": "~5.6.2",
     "typescript-eslint": "^8.18.2",
     "vite": "^6.0.5"
-  }
+  },
+  "description": "Node.js HTTP Web server for the Kambaz application",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kyrariedel/kambaz-react-web-app.git"
+  },
+  "keywords": [
+    "Node",
+    "REST",
+    "Server",
+    "HTTP",
+    "Web",
+    "Development",
+    "CS5610",
+    "CS4550"
+  ],
+  "author": "Kyra Riedel",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kyrariedel/kambaz-react-web-app/issues"
+  },
+  "homepage": "https://github.com/kyrariedel/kambaz-react-web-app#readme"
 }
