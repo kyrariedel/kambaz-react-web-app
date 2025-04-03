@@ -4,8 +4,9 @@ import { BsGripVertical } from "react-icons/bs";
 import ModuleControlButtons from "./modulecontrolbuttons";
 import LessonControlButtons from "./lessoncontrolbuttons";
 import { useParams } from "react-router";
-import { useState } from "react";
-import { addModule, editModule, updateModule, deleteModule }
+import { useState, useEffect } from "react";
+import * as coursesClient from "../client";
+import { addModule, editModule, setModules, updateModule, deleteModule }
   from "./modulereducer";
 import { useSelector, useDispatch } from "react-redux";
 import FacultyOnly from "../../Account/facultyonly";
@@ -15,6 +16,14 @@ export default function Modules() {
   const [moduleName, setModuleName] = useState("");
   const { modules } = useSelector((state: any) => state.modulesReducer);
   const dispatch = useDispatch();
+  const fetchModules = async () => {
+    const modules = await coursesClient.findModulesForCourse(cid as string);
+    dispatch(setModules(modules));
+  };
+  useEffect(() => {
+    fetchModules();
+  }, []);
+
 
     return (
       <ul id="wd-modules" className="list-group rounded-0">
@@ -25,7 +34,6 @@ export default function Modules() {
         }} />
         </FacultyOnly>
       {modules
-        .filter((module: any) => module.course === cid)
         .map((module: any) => (
         <li className="wd-module list-group-item p-0 mb-5 fs-5 border-gray">
           <div className="wd-title p-3 ps-2 bg-secondary">

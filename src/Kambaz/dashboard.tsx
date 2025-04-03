@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import * as db from "./Database";
 import { FormControl, Button, Form } from "react-bootstrap";
 import { v4 as uuidv4 } from "uuid";
 import { useSelector } from "react-redux";
@@ -13,7 +12,6 @@ export default function Dashboard(
     addNewCourse: () => void; deleteCourse: (course: any) => void;
     updateCourse: () => void; }) {
       const { currentUser } = useSelector((state: any) => state.accountReducer);
-      const [enrollmentsData, setEnrollmentsData] = useState(db.enrollments);
       const navigate = useNavigate();
       const [showAllCourses, setShowAllCourses] = useState(false);
 
@@ -21,53 +19,17 @@ export default function Dashboard(
         setShowAllCourses(!showAllCourses);
       };
 
-      const handleEnrollment = (courseId: string) => {
-        const isEnrolled = isUserEnrolled(courseId);
-
-        if (isEnrolled) {
-          const updatedEnrollments = enrollmentsData.filter(
-            enrollment => 
-              !(enrollment.user === currentUser._id && 
-                enrollment.course === courseId)
-          );
-          setEnrollmentsData(updatedEnrollments);
-        } else {
-          const newEnrollment = {
-            _id: uuidv4(),
-            user: currentUser._id,
-            course: courseId
-          };
-          setEnrollmentsData([...enrollmentsData, newEnrollment]);
-        }
-      };
-
-      const isUserEnrolled = (courseId: string) => {
-        return enrollmentsData.some(
-          (enrollment: any) => 
-            enrollment.user === currentUser._id && 
-            enrollment.course === courseId
-        );
-      };
-
       const handleCourseNavigation = (event: React.MouseEvent, courseId: string) => {
         event.preventDefault();
-        if (isUserEnrolled(courseId)) {
-          navigate(`/Kambaz/Courses/${courseId}/Home`);
-        }
+        navigate(`/Kambaz/Courses/${courseId}/Home`);
       };
-
-      const displayedCourses = showAllCourses 
-        ? courses 
-        : courses.filter((course) => 
-            isUserEnrolled(course._id)
-          );
 
   return (
     <div className="p-4" id="wd-dashboard">
       <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h2 id="wd-dashboard-published">
-          {showAllCourses ? "All Courses" : "My Courses"} ({displayedCourses.length})
+          {showAllCourses ? "All Courses" : "My Courses"}
         </h2>
         <Button 
           className="btn btn-primary" 
@@ -111,7 +73,7 @@ export default function Dashboard(
 
       <div className="row" id="wd-dashboard-courses">
         <div className="row row-cols-1 row-cols-md-5 g-4">
-          {displayedCourses.map((course) => (
+          {courses.map((course) => (
             <div key={course._id} className="col" style={{ width: "300px" }}>
               <div className="card">
                 <div 
