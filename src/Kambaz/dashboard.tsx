@@ -85,7 +85,7 @@ export default function Dashboard(
                   <h5 id="course-header"> {course.name} {course.number}</h5>
                   <div>{course.description}</div>
                   <div className="card-btns d-flex justify-content-between mt-2 p-2"> 
-                    {isUserEnrolled(course._id) ? (
+                    {/* {isUserEnrolled(course._id) ? (
                       <>
                         <Button className="btn btn-primary">
                           Go 
@@ -110,7 +110,7 @@ export default function Dashboard(
                       >
                         Enroll
                       </Button>
-                    )}
+                    )} */}
                     
                     <FacultyOnly>
                       <div className="ms-auto d-flex">

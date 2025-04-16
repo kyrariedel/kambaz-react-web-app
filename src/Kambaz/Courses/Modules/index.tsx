@@ -6,6 +6,7 @@ import LessonControlButtons from "./lessoncontrolbuttons";
 import { useParams } from "react-router";
 import { useState, useEffect } from "react";
 import * as coursesClient from "../client";
+import * as modulesClient from "./client";
 import { addModule, editModule, setModules, updateModule, deleteModule }
   from "./modulereducer";
 import { useSelector, useDispatch } from "react-redux";
@@ -23,15 +24,26 @@ export default function Modules() {
   useEffect(() => {
     fetchModules();
   }, []);
+  const createModuleForCourse = async () => {
+    if (!cid) return;
+    const newModule = { name: moduleName, course: cid };
+    const module = await coursesClient.createModuleForCourse(cid, newModule);
+    dispatch(addModule(module));
+  };
+  const removeModule = async (moduleId: string) => {
+    await modulesClient.deleteModule(moduleId);
+    dispatch(deleteModule(moduleId));
+  };
+  const saveModule = async (module: any) => {
+    await modulesClient.updateModule(module);
+    dispatch(updateModule(module));
+  };
 
 
     return (
       <ul id="wd-modules" className="list-group rounded-0">
         <FacultyOnly>
-        <ModulesControls setModuleName={setModuleName} moduleName={moduleName} addModule={() => {
-          dispatch(addModule({ name: moduleName, course: cid }));
-          setModuleName("");
-        }} />
+        <ModulesControls setModuleName={setModuleName} moduleName={moduleName} addModule={createModuleForCourse} />
         </FacultyOnly>
       {modules
         .map((module: any) => (
@@ -47,16 +59,14 @@ export default function Modules() {
                     ) }
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
-                        dispatch(updateModule({ ...module, editing: false }));
+                        saveModule({ ...module, editing: false });
                       }
                     }}
                     defaultValue={module.name}/>
             )}            
              <ModuleControlButtons 
               moduleId={module._id}
-              deleteModule={(moduleId) => {
-                dispatch(deleteModule(moduleId));
-              }}
+              deleteModule={(moduleId) => removeModule(moduleId)}
               editModule={(moduleId) => dispatch(editModule(moduleId))} />
               </FacultyOnly>
           </div>

@@ -45,7 +45,7 @@ export default function Kambaz() {
         courses.map((c) => {
           if (c._id === course._id) {
             return course;
-          } else {C
+          } else {
             return c;
           }
         })
