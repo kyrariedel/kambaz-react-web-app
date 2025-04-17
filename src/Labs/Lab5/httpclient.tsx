@@ -1,7 +1,7 @@
 import {useEffect, useState } from "react";
 import * as client from "./client";
 
-const REMOTE_SERVER = import.meta.env.VITE_REMOTE_SERVER;
+// const REMOTE_SERVER = import.meta.env.VITE_REMOTE_SERVER;
 
 export default function HttpClient() {
   const [welcomeOnClick, setWelcomeOnClick] = useState("");
