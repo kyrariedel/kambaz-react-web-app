@@ -16,10 +16,9 @@ const modulesSlice = createSlice({
       };
       state.modules = [...state.modules, newModule] as any;
     },
-    setModules: (state, action) => {
-      state.modules = action.payload;
-    },
-
+    setModules: (state, { payload: modules }) => {
+      state.modules = modules;
+    }, 
     deleteModule: (state, { payload: moduleId }) => {
       state.modules = state.modules.filter(
         (m: any) => m._id !== moduleId);

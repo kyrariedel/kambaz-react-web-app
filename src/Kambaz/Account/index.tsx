@@ -2,7 +2,7 @@ import Signin from "./signin";
 import Profile from "./profile";
 import Signup from "./signup";
 import { useSelector } from "react-redux";
-
+import Users from "./users";
 import AccountNavigation from "./navigation";
 import { Routes, Route, Navigate } from "react-router";
 export default function Account() {
@@ -21,6 +21,8 @@ export default function Account() {
                 <Route path="/Signin"  element={<Signin />} />
                 <Route path="/Profile" element={<Profile />} />
                 <Route path="/Signup"  element={<Signup />} />
+                <Route path="/Users" element={<Users />} />
+                <Route path="/Users/:uid" element={<Users />} />
               </Routes>
             </td>
           </tr>

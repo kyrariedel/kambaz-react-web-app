@@ -26,11 +26,37 @@ export default function Assignments() {
             hour12: true
         });
     };
-
+    const addAssignmentHandler = async () => {
+        const newAssignment = await coursesClient.createModuleForCourse(courseId!, {
+          name: assignmentName,
+          course: courseId,
+        });
+        dispatch(addAssignment(newAssignment));
+        setAssignmentName("");
+      };
+      const updateAssignmentHandler = async (assignment: any) => {
+        await assignmentsClient.updateAssignment(assignment);
+        dispatch(updateAssignment(assignment));
+      };
+     
+     
+    const fetchAssignmentsForCourse = async () => {
+        const modules = await coursesClient.findModulesForCourse(courseId!);
+        dispatch(setAssignment(modules));
+      };
+      useEffect(() => {
+        fetchAssignmentsForCourse();
+      }, [courseId]);
+     
     const fetchAssignments = async () => {
         const assignments = await coursesClient.findAssignmentsForCourse(courseId as string);
         dispatch(setAssignment(assignments));
     };
+    const deleteAssignmentHandler = async (moduleId: string) => {
+        await assignmentsClient.deleteAssignment(moduleId);
+        dispatch(deleteAssignment(moduleId));
+      };
+     
     
     useEffect(() => {
         fetchAssignments();
@@ -59,7 +85,7 @@ export default function Assignments() {
                 <AssignmentControls 
                     setAssignmentName={setAssignmentName} 
                     assignmentName={assignmentName} 
-                    addAssignment={createAssignmentForCourse}
+                    addAssignment={addAssignmentHandler}
                 />
             </FacultyOnly>
 
@@ -86,7 +112,7 @@ export default function Assignments() {
                                     <FormControl
                                         className="w-50 d-inline-block"
                                         onChange={(e) =>
-                                            dispatch(updateAssignment({ ...assignment, title: e.target.value }))
+                                            updateAssignmentHandler({ ...assignment, title: e.target.value })
                                         }
                                         onKeyDown={(e) => {
                                             if (e.key === "Enter") {
@@ -108,7 +134,7 @@ export default function Assignments() {
                                 <FacultyOnly>
                                     <AssignmentControlButtons
                                         assignmentId={assignment._id}
-                                        deleteAssignment={(assignmentId) => removeAssignment(assignmentId)}
+                                        deleteAssignment={(assignmentId) => deleteAssignmentHandler(assignmentId)}
                                         updateAssignment={(assignmentId) => dispatch(updateAssignment({ _id: assignmentId, editing: true }))}
                                     />
                                 </FacultyOnly>

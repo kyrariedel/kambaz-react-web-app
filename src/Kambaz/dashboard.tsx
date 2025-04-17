@@ -7,10 +7,10 @@ import FacultyOnly from "./Account/facultyonly";
 
 export default function Dashboard(
   { courses, course, setCourse, addNewCourse,
-    deleteCourse, updateCourse }: {
+    deleteCourse, updateCourse, enrolling, setEnrolling, updateEnrollment }: {
     courses: any[]; course: any; setCourse: (course: any) => void;
     addNewCourse: () => void; deleteCourse: (course: any) => void;
-    updateCourse: () => void; }) {
+    updateCourse: () => void; enrolling: boolean; setEnrolling: (enrolling: boolean) => void; updateEnrollment: (courseId: string, enrolled: boolean) => void;}) {
       const { currentUser } = useSelector((state: any) => state.accountReducer);
       const navigate = useNavigate();
       const [showAllCourses, setShowAllCourses] = useState(false);
@@ -82,7 +82,14 @@ export default function Dashboard(
                   style={{ cursor: "pointer" }}
                 >
                   <img src={course.image} alt={course.name} width="100%" height={160} />
-                  <h5 id="course-header"> {course.name} {course.number}</h5>
+                  <h5 id="course-header">             {enrolling && ( 
+              <button onClick={(event) => {
+                event.preventDefault();
+                updateEnrollment(course._id, !course.enrolled);
+              }} className={`btn ${ course.enrolled ? "btn-danger" : "btn-success" } float-end`} >
+                {course.enrolled ? "Unenroll" : "Enroll"}
+              </button>
+            )}{course.name} {course.number}</h5>
                   <div>{course.description}</div>
                   <div className="card-btns d-flex justify-content-between mt-2 p-2"> 
                     {/* {isUserEnrolled(course._id) ? (

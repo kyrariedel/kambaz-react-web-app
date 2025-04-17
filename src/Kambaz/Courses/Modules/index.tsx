@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import * as coursesClient from "../client";
 import * as modulesClient from "./client";
 import { addModule, editModule, setModules, updateModule, deleteModule }
+
   from "./modulereducer";
 import { useSelector, useDispatch } from "react-redux";
 import FacultyOnly from "../../Account/facultyonly";
@@ -17,6 +18,34 @@ export default function Modules() {
   const [moduleName, setModuleName] = useState("");
   const { modules } = useSelector((state: any) => state.modulesReducer);
   const dispatch = useDispatch();
+  const fetchModulesForCourse = async () => {
+    const modules = await coursesClient.findModulesForCourse(cid!);
+    dispatch(setModules(modules));
+  };
+  useEffect(() => {
+    fetchModulesForCourse();
+  }, [cid]);
+ 
+  const addModuleHandler = async () => {
+    const newModule = await coursesClient.createModuleForCourse(cid!, {
+      name: moduleName,
+      course: cid,
+    });
+    dispatch(addModule(newModule));
+    setModuleName("");
+  };
+
+  const updateModuleHandler = async (module: any) => {
+    await modulesClient.updateModule(module);
+    dispatch(updateModule(module));
+  };
+ 
+  const deleteModuleHandler = async (moduleId: string) => {
+    await modulesClient.deleteModule(moduleId);
+    dispatch(deleteModule(moduleId));
+  };
+ 
+ 
   const fetchModules = async () => {
     const modules = await coursesClient.findModulesForCourse(cid as string);
     dispatch(setModules(modules));
@@ -43,7 +72,7 @@ export default function Modules() {
     return (
       <ul id="wd-modules" className="list-group rounded-0">
         <FacultyOnly>
-        <ModulesControls setModuleName={setModuleName} moduleName={moduleName} addModule={createModuleForCourse} />
+        <ModulesControls setModuleName={setModuleName} moduleName={moduleName} addModule={addModuleHandler} />
         </FacultyOnly>
       {modules
         .map((module: any) => (
@@ -51,24 +80,20 @@ export default function Modules() {
           <div className="wd-title p-3 ps-2 bg-secondary">
             <BsGripVertical className="me-2 fs-3" />
             {!module.editing && module.name}
-            <FacultyOnly>
-            { module.editing && (
-              <FormControl className="w-50 d-inline-block"
-                    onChange={(e) => dispatch(
-                      updateModule({ ...module, name: e.target.value })
-                    ) }
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        saveModule({ ...module, editing: false });
-                      }
-                    }}
-                    defaultValue={module.name}/>
-            )}            
+            {module.editing && (
+              <input onChange={(e) =>
+                        updateModuleHandler({ ...module, name: e.target.value }) }
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          updateModuleHandler({ ...module, editing: false });
+                        }
+                      }}
+                      value={module.name}/>
+              )}        
              <ModuleControlButtons 
               moduleId={module._id}
-              deleteModule={(moduleId) => removeModule(moduleId)}
+              deleteModule={(moduleId) => deleteModuleHandler(moduleId)}
               editModule={(moduleId) => dispatch(editModule(moduleId))} />
-              </FacultyOnly>
           </div>
           {module.lessons && (
             <ul className="wd-lessons list-group rounded-0">
