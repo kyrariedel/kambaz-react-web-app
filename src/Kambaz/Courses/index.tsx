@@ -3,7 +3,7 @@ import Modules from "./Modules";
 import Home from "./Home";
 import Assignments from "./Assignments";
 import PeopleTable from "./People/table";
-import AssignmentEditor from "./Assignments/editor";
+// import AssignmentEditor from "./Assignments/editor";
 import { Navigate, Route, Routes, useParams, useLocation } from "react-router";
 import { FaAlignJustify } from "react-icons/fa";
 import ProtectedRoute from "../Account/protectedroute";
