@@ -62,17 +62,17 @@ export default function Assignments() {
         fetchAssignments();
     }, [courseId]);
     
-    const createAssignmentForCourse = async () => {
-        if (!courseId) return;
-        const newAssignment = { title: assignmentName, course: courseId };
-        const assignment = await coursesClient.createAssignmentForCourse(courseId, newAssignment);
-        dispatch(addAssignment(assignment));
-    };
+    // const createAssignmentForCourse = async () => {
+    //     if (!courseId) return;
+    //     const newAssignment = { title: assignmentName, course: courseId };
+    //     const assignment = await coursesClient.createAssignmentForCourse(courseId, newAssignment);
+    //     dispatch(addAssignment(assignment));
+    // };
 
-    const removeAssignment = async (assignmentId: string) => {
-        await assignmentsClient.deleteAssignment(assignmentId);
-        dispatch(deleteAssignment(assignmentId));
-    };
+    // const removeAssignment = async (assignmentId: string) => {
+    //     await assignmentsClient.deleteAssignment(assignmentId);
+    //     dispatch(deleteAssignment(assignmentId));
+    // };
     
     const saveAssignment = async (assignment: any) => {
         await assignmentsClient.updateAssignment(assignment);

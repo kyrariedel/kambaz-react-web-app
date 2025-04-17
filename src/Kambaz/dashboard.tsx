@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FormControl, Button, Form } from "react-bootstrap";
-import { v4 as uuidv4 } from "uuid";
-import { useSelector } from "react-redux";
 import FacultyOnly from "./Account/facultyonly";
 
 export default function Dashboard(
@@ -11,7 +9,7 @@ export default function Dashboard(
     courses: any[]; course: any; setCourse: (course: any) => void;
     addNewCourse: () => void; deleteCourse: (course: any) => void;
     updateCourse: () => void; enrolling: boolean; setEnrolling: (enrolling: boolean) => void; updateEnrollment: (courseId: string, enrolled: boolean) => void;}) {
-      const { currentUser } = useSelector((state: any) => state.accountReducer);
+      // const { currentUser } = useSelector((state: any) => state.accountReducer);
       const navigate = useNavigate();
       const [showAllCourses, setShowAllCourses] = useState(false);
 
@@ -26,7 +24,9 @@ export default function Dashboard(
 
   return (
     <div className="p-4" id="wd-dashboard">
-      <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
+      <h1 id="wd-dashboard-title">Dashboard         <button onClick={() => setEnrolling(!enrolling)} className="float-end btn btn-primary" >
+          {enrolling ? "My Courses" : "All Courses"}
+        </button></h1> <hr />
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h2 id="wd-dashboard-published">
           {showAllCourses ? "All Courses" : "My Courses"}
@@ -92,32 +92,6 @@ export default function Dashboard(
             )}{course.name} {course.number}</h5>
                   <div>{course.description}</div>
                   <div className="card-btns d-flex justify-content-between mt-2 p-2"> 
-                    {/* {isUserEnrolled(course._id) ? (
-                      <>
-                        <Button className="btn btn-primary">
-                          Go 
-                        </Button>
-                        <Button 
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            handleEnrollment(course._id);
-                          }} 
-                          className="btn btn-danger"
-                        >
-                          Unenroll
-                        </Button>
-                      </>
-                    ) : (
-                      <Button 
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          handleEnrollment(course._id);
-                        }} 
-                        className="btn btn-success w-100"
-                      >
-                        Enroll
-                      </Button>
-                    )} */}
                     
                     <FacultyOnly>
                       <div className="ms-auto d-flex">
