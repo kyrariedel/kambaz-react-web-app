@@ -24,8 +24,12 @@ export const profile = async () => {
   return response.data;
 };
 export const signup = async (user: any) => {
-  const response = await axiosWithCredentials.post(`${USERS_API}/signup`, user);
-  return response.data;
+  try {  
+    const response = await axiosWithCredentials.post(`${USERS_API}/signup`, user);
+    return response.data;
+  } catch (error) {
+    console.error("Error during signup:", error);
+  }
 };
 export const signout = async () => {
   const response = await axiosWithCredentials.post(`${USERS_API}/signout`);

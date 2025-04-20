@@ -19,4 +19,6 @@ export const { setCurrentUser } = accountSlice.actions;
 import { RootState } from "../store"; // Import RootState from store.tsx
 export const isFaculty = (state: RootState) => 
     state.accountReducer.currentUser?.role === "FACULTY";
+export const isStudent = (state: RootState) => 
+  state.accountReducer.currentUser?.role === "STUDENT";
 export default accountSlice.reducer;

@@ -17,6 +17,7 @@ import * as courseClient from "./Courses/client";
 export default function Kambaz() {
     const [courses, setCourses] = useState<any[]>([]);
     const [enrolling, setEnrolling] = useState<boolean>(false);
+    const { currentUser } = useSelector((state: any) => state.accountReducer);
     const findCoursesForUser = async () => {
       try {
         const courses = await userClient.findCoursesForUser(currentUser._id);
@@ -60,7 +61,7 @@ export default function Kambaz() {
       );
     };
    
-    const { currentUser } = useSelector((state: any) => state.accountReducer);
+
     useEffect(() => {
       if (enrolling) {
         fetchCourses();
