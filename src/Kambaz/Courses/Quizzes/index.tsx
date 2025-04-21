@@ -1,32 +1,32 @@
-import { useParams, Link } from "react-router-dom";
-import { ListGroup, FormControl, Button } from "react-bootstrap";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { ListGroup } from "react-bootstrap";
 import { BsGripVertical } from "react-icons/bs";
-import { useSelector, useDispatch } from "react-redux";
-import { useState, useEffect } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { BsBan } from "react-icons/bs";
-import { FaPlus } from "react-icons/fa";
-import FacultyOnly from "../../Account/facultyonly";
 import QuizControls from "./quizcontrols";
 import QuizControlButtons from "./quizcontrolbuttons";
+import { useSelector, useDispatch } from "react-redux";
 import * as quizzesClient from "./client";
-import { setQuizzes } from "./reducer";
+import { setQuizzes, setLoading, addQuiz, updateQuiz, deleteQuiz } from "./reducer";
+import { useState, useEffect } from "react";
+import FacultyOnly from "../../Account/facultyonly";
+import StudentOnly from "../../Account/studentonly";
 
-export default function QuizList() {
+export default function Quizzes() {
     const { courseId } = useParams();
     const [quizName, setQuizName] = useState("New Quiz");
     const { quizzes, loading } = useSelector((state: any) => state.quizzesReducer);
     const dispatch = useDispatch();
-    const user = useSelector((state: any) => state.userReducer.currentUser);
+    const navigate = useNavigate();
 
     const formatDate = (date: string) => {
         if (!date) return "";
-        return new Date(date).toLocaleDateString('en-US', {
-            month: 'short',
-            day: 'numeric',
-            hour: 'numeric',
-            minute: 'numeric',
-            hour12: true
+        return new Date(date).toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true,
         });
     };
 
@@ -51,42 +51,38 @@ export default function QuizList() {
     };
 
     const getQuestionCount = (quiz: any) => {
-        // This would ideally be part of the quiz object from the API
         return quiz.questionCount || 0;
     };
 
-    const addQuizHandler = async () => {
-        try {
-            const newQuiz = await quizzesClient.createQuiz(courseId!, {
-                title: quizName,
-                course: courseId
-            });
-            
-            fetchQuizzesForCourse();
-            // Navigate to edit page
-            window.location.href = `/Kambaz/Courses/${courseId}/Quizzes/${newQuiz._id}/edit`;
-        } catch (error) {
-            console.error("Error creating quiz:", error);
-        }
+    // Modified to navigate directly to the new quiz editor page
+    const addQuizHandler = () => {
+        // Instead of creating a quiz first, we'll navigate to a new route for quiz creation
+        navigate(`/Kambaz/Courses/${courseId}/Quizzes/new`);
     };
 
     const fetchQuizzesForCourse = async () => {
+        dispatch(setLoading(true));
         try {
             const fetchedQuizzes = await quizzesClient.fetchQuizzesForCourse(courseId!);
             dispatch(setQuizzes(fetchedQuizzes));
         } catch (error) {
             console.error("Error fetching quizzes:", error);
+        } finally {
+            dispatch(setLoading(false));
         }
     };
 
     useEffect(() => {
-        fetchQuizzesForCourse();
+        if (courseId) {
+            fetchQuizzesForCourse();
+        }
     }, [courseId]);
 
     const togglePublish = async (quiz: any) => {
         try {
             await quizzesClient.publishQuiz(quiz._id, !quiz.published);
-            fetchQuizzesForCourse();
+            const updatedQuiz = { ...quiz, published: !quiz.published };
+            dispatch(updateQuiz(updatedQuiz));
         } catch (error) {
             console.error("Error toggling publish status:", error);
         }
@@ -95,29 +91,29 @@ export default function QuizList() {
     const deleteQuizHandler = async (quizId: string) => {
         try {
             await quizzesClient.deleteQuiz(quizId);
-            fetchQuizzesForCourse();
+            dispatch(deleteQuiz(quizId));
         } catch (error) {
             console.error("Error deleting quiz:", error);
         }
     };
 
     const getStudentScore = (quiz: any) => {
-        if (user?.role !== "STUDENT" || !quiz.attempts || quiz.attempts.length === 0) {
+        if (!quiz.attempts || quiz.attempts.length === 0) {
             return null;
         }
-        
-        const latestAttempt = quiz.attempts[0];
+
+        const latestAttempt = quiz.attempts[0]; // Assuming attempts are sorted with latest first
         if (!latestAttempt.completed) {
             return null;
         }
-        
+
         return `${latestAttempt.score} / ${latestAttempt.totalPoints}`;
     };
 
     return (
         <div>
             <FacultyOnly>
-                <QuizControls 
+                <QuizControls
                     addQuiz={addQuizHandler}
                 />
             </FacultyOnly>
@@ -131,7 +127,12 @@ export default function QuizList() {
 
                     {quizzes.length === 0 && (
                         <div className="p-4 text-center">
-                            No quizzes yet. Click the "+ Quiz" button to create one.
+                            <FacultyOnly>
+                                No quizzes yet. Click the '+ Quiz' button to create one.
+                            </FacultyOnly>
+                            <StudentOnly>
+                                No quizzes yet. Your instructor hasn't created any quizzes yet.
+                            </StudentOnly>
                         </div>
                     )}
 
@@ -140,21 +141,33 @@ export default function QuizList() {
                             <ListGroup.Item key={quiz._id} className="wd-quiz p-3 ps-1">
                                 <div className="d-flex">
                                     <div className="me-2">
-                                        {quiz.published ? (
-                                            <FaCheckCircle 
-                                                className="text-success fs-5" 
-                                                onClick={() => user?.role === "FACULTY" ? togglePublish(quiz) : null}
-                                                style={user?.role === "FACULTY" ? { cursor: "pointer" } : {}}
-                                            />
-                                        ) : (
-                                            <BsBan 
-                                                className="text-danger fs-5" 
-                                                onClick={() => user?.role === "FACULTY" ? togglePublish(quiz) : null}
-                                                style={user?.role === "FACULTY" ? { cursor: "pointer" } : {}}
-                                            />
-                                        )}
+                                        <FacultyOnly>
+                                            {quiz.published ? (
+                                                <FaCheckCircle
+                                                    className="text-success fs-5"
+                                                    onClick={() => togglePublish(quiz)}
+                                                    style={{ cursor: "pointer" }}
+                                                    title="Click to unpublish"
+                                                />
+                                            ) : (
+                                                <BsBan
+                                                    className="text-danger fs-5"
+                                                    onClick={() => togglePublish(quiz)}
+                                                    style={{ cursor: "pointer" }}
+                                                    title="Click to publish"
+                                                />
+                                            )}
+                                        </FacultyOnly>
+                                        
+                                        <StudentOnly>
+                                            {quiz.published ? (
+                                                <FaCheckCircle className="text-success fs-5" />
+                                            ) : (
+                                                <BsBan className="text-danger fs-5" />
+                                            )}
+                                        </StudentOnly>
                                     </div>
-                                    
+
                                     <div className="flex-grow-1">
                                         <Link
                                             to={`/Kambaz/Courses/${courseId}/Quizzes/${quiz._id}`}
@@ -162,7 +175,7 @@ export default function QuizList() {
                                         >
                                             {quiz.title}
                                         </Link>
-                                        
+
                                         <div>
                                             <span className="text-muted">{getAvailabilityStatus(quiz)}</span>
                                             {quiz.dueDate && (
@@ -173,21 +186,21 @@ export default function QuizList() {
                                             )}
                                             <span className="ms-2">{quiz.points} pts</span>
                                             <span className="ms-2">{getQuestionCount(quiz)} questions</span>
-                                            
-                                            {user?.role === "STUDENT" && (
-                                                <span className="ms-2">
-                                                    {getStudentScore(quiz) ? (
-                                                        <>Score: {getStudentScore(quiz)}</>
-                                                    ) : null}
-                                                </span>
-                                            )}
+
+                                            <StudentOnly>
+                                                {getStudentScore(quiz) && (
+                                                    <span className="ms-2">
+                                                        Score: {getStudentScore(quiz)}
+                                                    </span>
+                                                )}
+                                            </StudentOnly>
                                         </div>
                                     </div>
 
                                     <FacultyOnly>
                                         <QuizControlButtons
                                             quizId={quiz._id}
-                                            deleteQuiz={(quizId) => deleteQuizHandler(quizId)}
+                                            deleteQuiz={deleteQuizHandler}
                                             courseId={courseId!}
                                         />
                                     </FacultyOnly>

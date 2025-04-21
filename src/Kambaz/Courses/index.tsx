@@ -3,10 +3,12 @@ import Modules from "./Modules";
 import Home from "./Home";
 import Assignments from "./Assignments";
 import PeopleTable from "./People/table";
+import Quizzes from "./Quizzes";
 // import AssignmentEditor from "./Assignments/editor";
 import { Navigate, Route, Routes, useParams, useLocation } from "react-router";
 import { FaAlignJustify } from "react-icons/fa";
 import ProtectedRoute from "../Account/protectedroute";
+import QuizDetailsEditor from "./Quizzes/detailseditor";
 
 export default function Courses({ courses }: { courses: any[]; }) {
     const { cid } = useParams();
@@ -29,6 +31,8 @@ export default function Courses({ courses }: { courses: any[]; }) {
                         <Route path="Modules" element={<Modules />} />
                         <Route path="Assignments" element={<ProtectedRoute><Assignments /></ProtectedRoute>} />
                         {/* <Route path="Assignments/:aid" element={<AssignmentEditor />} /> */}
+                        <Route path="Quizzes" element={<ProtectedRoute><Quizzes /></ProtectedRoute>} />
+                        <Route path="Quizzes/:qid" element={<QuizDetailsEditor />} />
                         <Route path="People" element={<PeopleTable />} />
                     </Routes>
                 </div>

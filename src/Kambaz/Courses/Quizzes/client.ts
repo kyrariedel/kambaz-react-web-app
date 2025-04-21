@@ -4,7 +4,6 @@ const REMOTE_SERVER = import.meta.env.VITE_REMOTE_SERVER;
 const QUIZZES_API = `${REMOTE_SERVER}/api`;
 const axiosWithCredentials = axios.create({ withCredentials: true });
 
-// Quiz operations
 export const fetchQuizzesForCourse = async (courseId: string) => {
   const response = await axiosWithCredentials.get(`${QUIZZES_API}/courses/${courseId}/quizzes`);
   return response.data;
@@ -15,7 +14,7 @@ export const fetchQuiz = async (quizId: string) => {
   return response.data;
 };
 
-export const createQuiz = async (courseId: string, quiz: { title: string; course: string | undefined; createdBy: any; }) => {
+export const createQuiz = async (courseId: string, quiz: { title: string; course: string | undefined; }) => {
   const response = await axiosWithCredentials.post(`${QUIZZES_API}/courses/${courseId}/quizzes`, quiz);
   return response.data;
 };
@@ -35,13 +34,11 @@ export const publishQuiz = async (quizId: string, published: boolean) => {
   return response.data;
 };
 
-// Question operations
 export const fetchQuestionsForQuiz = async (quizId: string) => {
   const response = await axiosWithCredentials.get(`${QUIZZES_API}/quizzes/${quizId}/questions`);
   return response.data;
 };
 
-// Question operations (continued)
 export const fetchQuestion = async (questionId: string) => {
     const response = await axiosWithCredentials.get(`${QUIZZES_API}/questions/${questionId}`);
     return response.data;
@@ -67,7 +64,6 @@ export const fetchQuestion = async (questionId: string) => {
     return response.data;
   };
   
-  // Quiz attempt operations
   export const fetchAttemptsForQuiz = async (quizId: string) => {
     const response = await axiosWithCredentials.get(`${QUIZZES_API}/quizzes/${quizId}/attempts`);
     return response.data;

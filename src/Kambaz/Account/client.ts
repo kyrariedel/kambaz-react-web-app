@@ -15,9 +15,15 @@ export const findAllUsers = async () => {
   const response = await axiosWithCredentials.get(USERS_API);
   return response.data;
 };
+
 export const signin = async (credentials: any) => {
-  const response = await axiosWithCredentials.post(`${USERS_API}/signin`, credentials);
-  return response.data;
+  try {
+    const response = await axiosWithCredentials.post(`${USERS_API}/signin`, credentials);
+    return response.data;
+  } catch (error) {
+    console.log("Signin error:", error);
+    return null;
+  }
 };
 export const profile = async () => {
   const response = await axiosWithCredentials.post(`${USERS_API}/profile`);

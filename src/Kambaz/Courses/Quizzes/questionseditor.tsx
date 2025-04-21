@@ -75,7 +75,6 @@ export default function QuizQuestionsEditor({ quizId }: { quizId: string }) {
         const { name, value } = e.target;
         
         if (name === "questionType") {
-            // Reset form based on question type
             if (value === "MULTIPLE_CHOICE") {
                 setCurrentQuestion({
                     ...currentQuestion,
@@ -137,7 +136,6 @@ export default function QuizQuestionsEditor({ quizId }: { quizId: string }) {
         const updatedChoices = [...currentQuestion.choices];
         updatedChoices.splice(index, 1);
         
-        // If removing the correct answer, update correctAnswer
         let updatedCorrectAnswer = currentQuestion.correctAnswer;
         if (typeof currentQuestion.correctAnswer === 'number') {
             if (currentQuestion.correctAnswer === index) {
